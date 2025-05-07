@@ -10,8 +10,9 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/uptrace/bun v1.2.11
 	github.com/uptrace/bun/driver/pgdriver v1.2.11
-	golang.org/x/crypto v0.37.0
 )
+
+require golang.org/x/crypto v0.37.0 // indirect
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
