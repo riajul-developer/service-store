@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
-	// "service-store/config"
+	"service-store/config"
 	"service-store/internal/routes"
 	"service-store/utils"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
@@ -13,8 +14,8 @@ func main() {
 			return utils.ErrorResponse(c, 500, "Something went wrong", nil)
 		},
 	})
-	// config.LoadEnv()
-	// config.ConnectDB()
+	config.LoadEnv()
+	config.ConnectDB()
 
 	routes.SetupRoutes(app)
 	app.Listen(":3000")

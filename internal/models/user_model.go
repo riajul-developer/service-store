@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+
 	"github.com/uptrace/bun"
 )
 
@@ -12,5 +13,6 @@ type User struct {
 	Name      string    `bun:",notnull"`
 	Email     string    `bun:",unique,notnull"`
 	Password  string    `bun:",notnull"`
-	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	CreatedAt time.Time `bun:",default:current_timestamp"`
+	UpdatedAt time.Time `bun:",default:current_timestamp"`
 }
