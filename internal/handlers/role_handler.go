@@ -38,38 +38,38 @@ func CreateRole(c *fiber.Ctx) error {
 
 }
 
-// func AssignPermissions(c *fiber.Ctx) error {
-// 	// Parse and validate input
-// 	input, msg, errs := validators.ValidateBody[services.LoginInput](c)
-// 	if errs != nil {
-// 		return utils.ErrorResponse(c, 422, msg, errs)
-// 	}
-// 	if msg != "" {
-// 		return utils.ErrorResponse(c, 400, msg, nil)
-// 	}
+func AssignPermissions(c *fiber.Ctx) error {
+	// Parse and validate input
+	input, msg, errs := validators.ValidateBody[services.AssignPermissionInput](c)
+	if errs != nil {
+		return utils.ErrorResponse(c, 422, msg, errs)
+	}
+	if msg != "" {
+		return utils.ErrorResponse(c, 400, msg, nil)
+	}
 
-// 	user, err := services.IsExistUser(input.Email)
-// 	if err != nil {
-// 		return utils.ErrorResponse(c, 500, "Something went wrong.", nil)
-// 	}
-// 	if user == nil {
-// 		return utils.ErrorResponse(c, 401, "Invalid credentials", nil)
-// 	}
+	role, err := services.IsExistRole(input.RoleID)
+	if err != nil {
+		return utils.ErrorResponse(c, 500, "Something went wrong.", nil)
+	}
+	if role == nil {
+		return utils.ErrorResponse(c, 401, "Invalid credentials", nil)
+	}
 
-// 	// Verify password
-// 	if err := services.VerifyPassword(input.Password, user.Password); err != nil {
-// 		return utils.ErrorResponse(c, 401, "Invalid credentials", nil)
-// 	}
+	// // Verify password
+	// if err := services.VerifyPassword(input.Password, user.Password); err != nil {
+	// 	return utils.ErrorResponse(c, 401, "Invalid credentials", nil)
+	// }
 
-// 	// Generate JWT token
-// 	token, err := services.GenerateJWTToken(user)
-// 	if err != nil {
-// 		return utils.ErrorResponse(c, 500, "Could not generate token.", nil)
-// 	}
+	// // Generate JWT token
+	// token, err := services.GenerateJWTToken(user)
+	// if err != nil {
+	// 	return utils.ErrorResponse(c, 500, "Could not generate token.", nil)
+	// }
 
-// 	// Return successful response
-// 	return utils.SuccessResponse(c, "Login successfully", fiber.Map{
-// 		"user":  user,
-// 		"token": token,
-// 	})
-// }
+	// // Return successful response
+	return utils.SuccessResponse(c, "Login successfully", fiber.Map{
+		"user":  "user",
+		"token": "token",
+	})
+}

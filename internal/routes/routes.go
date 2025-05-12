@@ -13,7 +13,7 @@ func SetupRoutes(app *fiber.App) {
 
 	role := app.Group("/roles")
 	role.Post("/create", handlers.CreateRole)
-	// role.Post("/assign-permissions", handlers.AssignPermissions)
+	role.Post("/assign-permissions", handlers.AssignPermissions)
 
 	// permission := app.Group("/permissions")
 	// permission.Get("/", handlers.GetAllPermissions)

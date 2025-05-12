@@ -42,6 +42,20 @@ func IsRoleNameTaken(name string) (bool, error) {
 	return role != nil, nil
 }
 
+// IsExistRole checks if a user exists by id and returns the role if found
+func IsExistRole(id int64) (*models.Role, error) {
+	role, err := repositories.GetRoleByID(id)
+
+	if err != nil {
+		if !utils.IsNotFoundError(err) {
+			return nil, err
+		}
+		return nil, nil
+	}
+
+	return role, nil
+}
+
 // func AssignPermissions(input AssignPermissionInput) error {
 // 	role, _ := repositories.GetRoleByID(input.RoleID)
 // 	if role == nil {
