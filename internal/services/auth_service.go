@@ -23,14 +23,17 @@ type LoginInput struct {
 }
 
 // RegisterUser handles the user registration
-func RegisterUser(input RegisterInput) error {
+func RegisterUser(input RegisterInput) (*models.User, error) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 14)
 	user := &models.User{
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: string(hashedPassword),
 	}
-	return repositories.CreateUser(user)
+	if err := repositories.CreateUser(user); err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // IsEmailTaken checks if the email already exists

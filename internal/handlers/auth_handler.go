@@ -30,8 +30,8 @@ func Register(c *fiber.Ctx) error {
 		return utils.ErrorResponse(c, 403, "Validation failed", ve.All())
 	}
 
-	if err := services.RegisterUser(*input); err != nil {
-		utils.ErrorResponse(c, 500, "Something went wrong.", nil)
+	if _, err := services.RegisterUser(*input); err != nil {
+		return utils.ErrorResponse(c, 500, "Something went wrong.", nil)
 	}
 
 	return utils.CreatedResponse(c, "Register successfully", nil)
