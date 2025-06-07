@@ -22,6 +22,15 @@ type LoginInput struct {
 	Password string `json:"password" validate:"required"`
 }
 
+type ForgetPasswordInput struct {
+	Email string `json:"email" validate:"required,email"`
+}
+
+type ResetPasswordInput struct {
+	Token       string `json:"token" validate:"required"`
+	NewPassword string `json:"new_password" validate:"required,min=6"`
+}
+
 // RegisterUser handles the user registration
 func RegisterUser(input RegisterInput) (*models.User, error) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 14)
@@ -77,20 +86,81 @@ func GenerateJWTToken(user *models.User) (string, error) {
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 
-	// Create the token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// Get secret key from environment variable or default
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
 		secret = "default_secret"
 	}
 
-	// Sign the token
 	signedToken, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}
 
 	return signedToken, nil
+}
+
+func SendResetPasswordToken(email string) error {
+	user, err := repositories.GetUserByEmail(email)
+	if err != nil {
+		if utils.IsNotFoundError(err) {
+			return nil
+		}
+		return err
+	}
+
+	claims := jwt.MapClaims{
+		"user_id": user.ID,
+		"email":   user.Email,
+		"exp":     time.Now().Add(15 * time.Minute).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "default_secret"
+	}
+
+	signedToken, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return err
+	}
+
+	resetLink := "https://yourdomain.com/reset-password?token=" + signedToken
+	return utils.SendEmail(user.Email, "Password Reset", "Click to reset your password: "+resetLink)
+}
+
+func ResetUserPassword(tokenStr string, newPassword string) error {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "default_secret"
+	}
+
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrInvalidKey
+		}
+		return []byte(secret), nil
+	})
+	if err != nil || !token.Valid {
+		return err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || claims["user_id"] == nil {
+		return jwt.ErrInvalidKey
+	}
+
+	userID := int64(claims["user_id"].(float64))
+	user, err := repositories.GetUserByID(userID)
+	if err != nil {
+		return err
+	}
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newPassword), 14)
+	user.Password = string(hashedPassword)
+
+	return repositories.UpdateUserPassword(user)
 }
