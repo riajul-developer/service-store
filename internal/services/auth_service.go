@@ -94,3 +94,25 @@ func GenerateJWTToken(user *models.User) (string, error) {
 
 	return signedToken, nil
 }
+
+// type ForgetPasswordInput struct {
+// 	Email string `json:"email" validate:"required,email"`
+// }
+
+// type ResetPasswordInput struct {
+// 	Token       string `json:"token" validate:"required"`
+// 	NewPassword string `json:"new_password" validate:"required,min=6"`
+// }
+
+// func SendResetPasswordToken(email string) error {
+// 	// 1. Check if email exists
+// 	// 2. Generate a token (e.g. JWT or UUID)
+// 	// 3. Save token to DB or cache with expiry
+// 	// 4. Send token via email (e.g., link: /reset-password?token=...)
+// }
+
+// func ResetUserPassword(token string, newPassword string) error {
+// 	// 1. Validate token (check expiry and existence)
+// 	// 2. Fetch user from token
+// 	// 3. Hash new password and update in DB
+// }

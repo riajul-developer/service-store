@@ -4,7 +4,6 @@ import (
 	"service-store/internal/services"
 	"service-store/internal/validators"
 	"service-store/utils"
-
 	"github.com/gofiber/fiber/v2"
 )
 

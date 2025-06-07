@@ -4,7 +4,6 @@ import (
 	"service-store/config"
 	"service-store/internal/routes"
 	"service-store/utils"
-
 	"github.com/gofiber/fiber/v2"
 )
 
