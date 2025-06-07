@@ -9,6 +9,7 @@ import (
 )
 
 func CreateRole(c *fiber.Ctx) error {
+	// there is a create role function here 
 
 	input, msg, errs := validators.ValidateBody[services.CreateRoleInput](c)
 
