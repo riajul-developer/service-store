@@ -9,11 +9,11 @@ import (
 type Permission struct {
 	bun.BaseModel `bun:"table:permissions"`
 
-	ID        int    `bun:",pk,autoincrement"`
-	Name      string `bun:",unique"`
-	Desc      *string
-	CreatedAt time.Time `bun:",default:current_timestamp"`
-	UpdatedAt time.Time `bun:",default:current_timestamp"`
+	ID        int       `bun:",pk,autoincrement" json:"id"`
+	Name      string    `bun:",unique" json:"name"`
+	Desc      *string   `json:"desc,omitempty"`
+	CreatedAt time.Time `bun:",default:current_timestamp" json:"created_at"`
+	UpdatedAt time.Time `bun:",default:current_timestamp" json:"updated_at"`
 
-	RolePermissions []RolePermission `bun:"rel:has-many"`
+	RolePermissions []RolePermission `bun:"rel:has-many" json:"role_permissions,omitempty"`
 }

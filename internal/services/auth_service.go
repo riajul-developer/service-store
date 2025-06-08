@@ -39,7 +39,6 @@ var secret = func() string {
 	return secret
 }()
 
-// RegisterUser handles the user registration
 func RegisterUser(input RegisterInput) (*models.User, error) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 14)
 	user := &models.User{
@@ -53,7 +52,6 @@ func RegisterUser(input RegisterInput) (*models.User, error) {
 	return user, nil
 }
 
-// IsEmailTaken checks if the email already exists
 func IsEmailTaken(email string) (bool, error) {
 	user, err := repositories.GetUserByEmail(email)
 
@@ -67,7 +65,6 @@ func IsEmailTaken(email string) (bool, error) {
 	return user != nil, nil
 }
 
-// IsExistUser checks if a user exists by email and returns the user if found
 func IsExistUser(email string) (*models.User, error) {
 	user, err := repositories.GetUserByEmail(email)
 
@@ -81,12 +78,10 @@ func IsExistUser(email string) (*models.User, error) {
 	return user, nil
 }
 
-// VerifyPassword compares the provided password with the stored password
 func VerifyPassword(providedPassword, storedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(providedPassword))
 }
 
-// GenerateJWTToken creates a signed JWT for the given user
 func GenerateJWTToken(user *models.User) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": user.ID,
