@@ -9,7 +9,6 @@ import (
 )
 
 func CreateRole(c *fiber.Ctx) error {
-	// there is a create role function here 
 
 	input, msg, errs := validators.ValidateBody[services.CreateRoleInput](c)
 
@@ -40,7 +39,7 @@ func CreateRole(c *fiber.Ctx) error {
 }
 
 func AssignPermissions(c *fiber.Ctx) error {
-	// Parse and validate input
+
 	input, msg, errs := validators.ValidateBody[services.AssignPermissionInput](c)
 	if errs != nil {
 		return utils.ErrorResponse(c, 422, msg, errs)

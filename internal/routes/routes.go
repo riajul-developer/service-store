@@ -10,6 +10,8 @@ func SetupRoutes(app *fiber.App) {
 	auth := app.Group("/auth")
 	auth.Post("/register", handlers.Register)
 	auth.Post("/login", handlers.Login)
+	auth.Post("/forgot-password", handlers.ForgetPassword)
+	auth.Post("/reset-password", handlers.ResetPassword)
 
 	role := app.Group("/roles")
 	role.Post("/create", handlers.CreateRole)
