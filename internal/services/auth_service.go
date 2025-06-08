@@ -31,6 +31,14 @@ type ResetPasswordInput struct {
 	NewPassword string `json:"new_password" validate:"required,min=6"`
 }
 
+var secret = func() string {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "default_secret"
+	}
+	return secret
+}()
+
 // RegisterUser handles the user registration
 func RegisterUser(input RegisterInput) (*models.User, error) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 14)
@@ -88,11 +96,6 @@ func GenerateJWTToken(user *models.User) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		secret = "default_secret"
-	}
-
 	signedToken, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
@@ -118,25 +121,25 @@ func SendResetPasswordToken(email string) error {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		secret = "default_secret"
-	}
-
 	signedToken, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return err
 	}
 
-	resetLink := "https://yourdomain.com/reset-password?token=" + signedToken
-	return utils.SendEmail(user.Email, "Password Reset", "Click to reset your password: "+resetLink)
+	siteUrl := os.Getenv("SITE_URL")
+
+	resetLink := siteUrl + "/reset-password?token=" + signedToken
+
+	return utils.SendEmail(user.Email, "Password Reset", "reset_password.html", map[string]interface{}{
+		"ResetLink":   resetLink,
+		"AppName":     "Service Store",
+		"UserName":    user.Name,
+		"CurrentYear": time.Now().Year(),
+	})
+
 }
 
 func ResetUserPassword(tokenStr string, newPassword string) error {
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		secret = "default_secret"
-	}
 
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

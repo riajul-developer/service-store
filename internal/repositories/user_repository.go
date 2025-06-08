@@ -30,10 +30,6 @@ func GetUserByID(id int64) (*models.User, error) {
 }
 
 func UpdateUserPassword(user *models.User) error {
-	_, err := config.DB.NewUpdate().
-		Model(user).
-		Column("password").
-		Where("id = ?", user.ID).
-		Exec(context.Background())
+	_, err := config.DB.NewUpdate().Model(user).Column("password").Where("id = ?", user.ID).Exec(context.Background())
 	return err
 }
