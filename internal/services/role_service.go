@@ -7,8 +7,8 @@ import (
 )
 
 type CreateRoleInput struct {
-	Name string `json:"name" validate:"required"`
-	Desc string `json:"desc"`
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description"`
 }
 
 type AssignPermissionInput struct {
@@ -19,8 +19,8 @@ type AssignPermissionInput struct {
 func CreateRole(input CreateRoleInput) (*models.Role, error) {
 
 	role := &models.Role{
-		Name: input.Name,
-		Desc: input.Desc,
+		Name:        input.Name,
+		Description: input.Description,
 	}
 	if err := repositories.CreateRole(role); err != nil {
 		return nil, err
