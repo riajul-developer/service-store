@@ -14,7 +14,7 @@ type User struct {
 	Email        string    `bun:",unique,notnull" json:"email"`
 	Phone        string    `bun:",unique" json:"phone"`
 	Password     string    `bun:",notnull" json:"-"`
-	Role         string    `bun:",notnull" json:"role"`
+	Role         string    `bun:",notnull,default:'customer'" json:"role"`
 	Address      string    `json:"address"`
 	ProfileImage string    `json:"profile_image"`
 	IsActive     bool      `bun:",default:true" json:"is_active"`
