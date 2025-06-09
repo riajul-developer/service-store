@@ -14,7 +14,11 @@ import (
 type RegisterInput struct {
 	Name     string `json:"name" validate:"required,min=3"`
 	Email    string `json:"email" validate:"required,email"`
+	Phone    string `json:"phone"`
 	Password string `json:"password" validate:"required,min=6"`
+	Role     string `json:"role"`
+	Address  string `json:"address"`
+	IsActive bool   `json:"is_active"`
 }
 
 type LoginInput struct {
@@ -40,12 +44,26 @@ var secret = func() string {
 }()
 
 func RegisterUser(input RegisterInput) (*models.User, error) {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), 14)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), 14)
+	if err != nil {
+		return nil, err
+	}
+
+	role := input.Role
+	if role == "" {
+		role = "customer"
+	}
+
 	user := &models.User{
 		Name:     input.Name,
 		Email:    input.Email,
+		Phone:    input.Phone,
 		Password: string(hashedPassword),
+		Role:     role,
+		Address:  input.Address,
+		IsActive: input.IsActive,
 	}
+
 	if err := repositories.CreateUser(user); err != nil {
 		return nil, err
 	}
