@@ -1,7 +1,0 @@
-CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
