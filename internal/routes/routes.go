@@ -19,4 +19,7 @@ func SetupRoutes(app *fiber.App) {
 
 	// permission := app.Group("/permissions")
 	// permission.Get("/", handlers.GetAllPermissions)
+
+	hub := app.Group("/hubs")
+	hub.Post("/create", handlers.CreateHub)
 }
